@@ -32,7 +32,6 @@ func main() {
 
 func workingDirectory() string {
 	if *fromDir != "" {
-		fmt.Println("derp")
 		return *fromDir
 	}
 	dir, err := os.Getwd()
