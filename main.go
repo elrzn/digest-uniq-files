@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 var (
@@ -28,15 +29,33 @@ func main() {
 	flag.Parse()
 
 	dir := workingDirectory()
+
+	fmt.Println(dir)
 }
 
 func workingDirectory() string {
-	if *fromDir != "" {
-		return *fromDir
-	}
+
+	// Get the current directory. This can be useful even when the
+	// user provided a working directory, as there is a chance it
+	// isn't an absolute path.
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// User provided a working directory.
+	if *fromDir != "" {
+
+		// Absolute path.
+		// TODO Possible issues in Windows.
+		if strings.HasPrefix(*fromDir, "/") {
+			return *fromDir
+		}
+
+		// Relative path.
+		return dir + "/" + *fromDir
+	}
+
+	// Default to working directory.
 	return dir
 }
