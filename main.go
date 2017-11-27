@@ -22,7 +22,7 @@ func init() {
 	debug = flag.Bool("debug", false, "enable debug mode")
 	ext = flag.String("ext", "", "a comma separated values indicating the file extensions to look for")
 	fromDir = flag.String("dir", "", "the directory containing the files")
-	toDir = flag.String("out", "to", "the output directory")
+	toDir = flag.String("out", "out", "the output directory")
 }
 
 func main() {
