@@ -6,21 +6,22 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/elrzn/digest-uniq-files/file"
 )
 
 var (
-	debug      *bool
-	extensions *string
-	fromDir    *string
-	recur      *bool
-	toDir      *string
+	debug   *bool
+	ext     *string
+	fromDir *string
+	recur   *bool
+	toDir   *string
 )
 
 func init() {
 	debug = flag.Bool("debug", false, "enable debug mode")
-	extensions = flag.String("ext", "", "a comma separated values indicating the file extensions to look for")
+	ext = flag.String("ext", "", "a comma separated values indicating the file extensions to look for")
 	fromDir = flag.String("dir", "", "the directory containing the files")
-	recur = flag.Bool("r", false, "recursive finding of files")
 	toDir = flag.String("out", "to", "the output directory")
 }
 
@@ -29,8 +30,9 @@ func main() {
 	flag.Parse()
 
 	dir := workingDirectory()
+	files := file.Find(dir, strings.Split(*ext, ","))
 
-	fmt.Println(dir)
+	fmt.Println(files)
 }
 
 func workingDirectory() string {
