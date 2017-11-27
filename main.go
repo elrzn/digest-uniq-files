@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -30,9 +30,37 @@ func main() {
 	flag.Parse()
 
 	dir := workingDirectory()
+	out := dir + "/" + *toDir + "/" // TODO needs better handling
+	os.Mkdir(out, 0777)
+
 	files := file.Find(dir, strings.Split(*ext, ","))
 
-	fmt.Println(files)
+	for _, f := range files {
+		cp(f.Path, out+f.Hash()+"."+f.Ext)
+	}
+}
+
+func cp(from, to string) {
+	src, err := os.Open(from)
+	die(err)
+	defer src.Close()
+
+	dst, err := os.Create(to)
+	die(err)
+	defer dst.Close()
+
+	bytesWritten, err := io.Copy(dst, src)
+	die(err)
+	log.Printf("Copied %d bytes.", bytesWritten)
+
+	err = dst.Sync()
+	die(err)
+}
+
+func die(err error) {
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 func workingDirectory() string {
@@ -41,9 +69,7 @@ func workingDirectory() string {
 	// user provided a working directory, as there is a chance it
 	// isn't an absolute path.
 	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
+	die(err)
 
 	// User provided a working directory.
 	if *fromDir != "" {

@@ -1,6 +1,9 @@
 package file
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -8,19 +11,37 @@ import (
 
 type File struct {
 	Path string
+	Ext  string
 	hash *string
 }
 
 func New(path string) File {
-	return File{Path: path, hash: nil}
+	return File{Path: path, Ext: ext(path), hash: nil}
 }
 
-func Hash(f *File) string {
+func (f *File) Hash() string {
 	if f.hash == nil {
-		hash := "TODO"
-		f.hash = &hash
+		md5, _ := f.makeMD5()
+		f.hash = &md5
 	}
 	return *f.hash
+}
+
+func (f File) makeMD5() (string, error) {
+
+	file, err := os.Open(f.Path)
+	if err != nil {
+		return "", err
+	}
+
+	defer file.Close()
+
+	md5 := md5.New()
+	if _, err := io.Copy(md5, file); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(md5.Sum(nil)[:16]), nil
 }
 
 func Find(dir string, ext []string) []File {
@@ -44,20 +65,20 @@ func Find(dir string, ext []string) []File {
 	return files
 }
 
-func nameExt(fullname string) (string, string) {
+func ext(path string) string {
 
 	const dot = "."
 
-	if fullname == "" {
-		return "", ""
+	if path == "" {
+		return ""
 	}
 
-	xs := strings.Split(fullname, dot)
+	xs := strings.Split(path, dot)
 	size := len(xs)
 
 	if size == 1 {
-		return fullname, ""
+		return ""
 	}
 
-	return strings.Join(xs[0:size-1], dot), xs[size-1]
+	return xs[size-1]
 }
