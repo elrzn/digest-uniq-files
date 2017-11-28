@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// File defines an struct for working around files.
 type File struct {
 	Path string
 	Ext  string
@@ -19,6 +20,8 @@ func ofPath(path string) File {
 	return File{Path: path, Ext: ext(path), hash: nil}
 }
 
+// Hash returns the MD5 hash of the contents of the file. The result is then
+// memoized.
 func (f *File) Hash() string {
 	if f.hash == nil {
 		md5, _ := f.makeMD5()
@@ -44,6 +47,8 @@ func (f File) makeMD5() (string, error) {
 	return hex.EncodeToString(md5.Sum(nil)[:16]), nil
 }
 
+// Find recursively retrieves all files from the given directory, that match an
+// optional list of extensions.
 func Find(dir string, ext []string) []File {
 
 	files := []File{}

@@ -65,9 +65,8 @@ func die(err error) {
 
 func workingDirectory() string {
 
-	// Get the current directory. This can be useful even when the
-	// user provided a working directory, as there is a chance it
-	// isn't an absolute path.
+	// Get the current directory. This can be useful even when the user provided a
+	// working directory, as there is a chance it isn't an absolute path.
 	dir, err := os.Getwd()
 	die(err)
 
