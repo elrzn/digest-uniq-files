@@ -30,14 +30,14 @@ func main() {
 	flag.Parse()
 
 	dir := workDir()
-	out := dir + "/" + *toDir + "/" // TODO needs better handling
+	out := targetDir(dir)
 	os.Mkdir(out, 0777)
 
 	files := file.Find(dir, strings.Split(*ext, ","))
 
 	cnt := map[string]int{}
 	for _, f := range files {
-		target := out + f.Hash() + "." + f.Ext
+		target := out + "/" + f.Hash() + "." + f.Ext
 		err := f.Copy(target)
 		die(err)
 		cnt[f.Hash()]++
@@ -74,4 +74,11 @@ func workDir() string {
 
 	// Default to working directory.
 	return dir
+}
+
+func targetDir(wdir string) string {
+	if strings.HasPrefix(*toDir, "/") {
+		return *toDir
+	}
+	return wdir + "/" + *toDir
 }
