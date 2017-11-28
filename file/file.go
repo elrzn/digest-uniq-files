@@ -15,7 +15,7 @@ type File struct {
 	hash *string
 }
 
-func New(path string) File {
+func ofPath(path string) File {
 	return File{Path: path, Ext: ext(path), hash: nil}
 }
 
@@ -55,7 +55,7 @@ func Find(dir string, ext []string) []File {
 		if !info.IsDir() {
 			for _, r := range ext {
 				if strings.HasSuffix(info.Name(), r) {
-					files = append(files, New(path))
+					files = append(files, ofPath(path))
 				}
 			}
 		}
