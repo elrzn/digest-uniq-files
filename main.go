@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -34,11 +35,15 @@ func main() {
 
 	files := file.Find(dir, strings.Split(*ext, ","))
 
+	cnt := map[string]int{}
 	for _, f := range files {
 		target := out + f.Hash() + "." + f.Ext
 		err := f.Copy(target)
 		die(err)
+		cnt[f.Hash()]++
 	}
+
+	fmt.Printf("%v\t%v\n", len(files), len(cnt))
 }
 
 func die(err error) {
