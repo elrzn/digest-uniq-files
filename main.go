@@ -29,8 +29,8 @@ func main() {
 
 	flag.Parse()
 
-	dir := workDir()
-	out := targetDir(dir)
+	dir := workDir(*fromDir)
+	out := targetDir(dir, *toDir)
 	os.Mkdir(out, 0777)
 
 	files := file.Find(dir, strings.Split(*ext, ","))
@@ -52,7 +52,7 @@ func die(err error) {
 	}
 }
 
-func workDir() string {
+func workDir(fromDir string) string {
 
 	// Get the current directory. This can be useful even when the user provided a
 	// working directory, as there is a chance it isn't an absolute path.
@@ -60,25 +60,25 @@ func workDir() string {
 	die(err)
 
 	// User provided a working directory.
-	if *fromDir != "" {
+	if fromDir != "" {
 
 		// Absolute path.
 		// TODO Possible issues in Windows.
-		if strings.HasPrefix(*fromDir, "/") {
-			return *fromDir
+		if strings.HasPrefix(fromDir, "/") {
+			return fromDir
 		}
 
 		// Relative path.
-		return dir + "/" + *fromDir
+		return dir + "/" + fromDir
 	}
 
 	// Default to working directory.
 	return dir
 }
 
-func targetDir(wdir string) string {
-	if strings.HasPrefix(*toDir, "/") {
-		return *toDir
+func targetDir(wdir, toDir string) string {
+	if strings.HasPrefix(toDir, "/") {
+		return toDir
 	}
-	return wdir + "/" + *toDir
+	return wdir + "/" + toDir
 }
