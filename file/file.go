@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -68,6 +69,35 @@ func Find(dir string, ext []string) []File {
 	})
 
 	return files
+}
+
+// Copy copies the file as the specified target.
+func (f *File) Copy(target string) error {
+
+	src, err := os.Open(f.Path)
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	dst, err := os.Create(target)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	bytesWritten, err := io.Copy(dst, src)
+	if err != nil {
+		return err
+	}
+	log.Printf("Copied %d bytes.", bytesWritten)
+
+	err = dst.Sync()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func ext(path string) string {

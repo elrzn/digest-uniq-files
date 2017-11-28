@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"io"
 	"log"
 	"os"
 	"strings"
@@ -36,25 +35,10 @@ func main() {
 	files := file.Find(dir, strings.Split(*ext, ","))
 
 	for _, f := range files {
-		cp(f.Path, out+f.Hash()+"."+f.Ext)
+		target := out + f.Hash() + "." + f.Ext
+		err := f.Copy(target)
+		die(err)
 	}
-}
-
-func cp(from, to string) {
-	src, err := os.Open(from)
-	die(err)
-	defer src.Close()
-
-	dst, err := os.Create(to)
-	die(err)
-	defer dst.Close()
-
-	bytesWritten, err := io.Copy(dst, src)
-	die(err)
-	log.Printf("Copied %d bytes.", bytesWritten)
-
-	err = dst.Sync()
-	die(err)
 }
 
 func die(err error) {
