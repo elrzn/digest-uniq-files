@@ -89,7 +89,7 @@ func (f *File) Copy(target string) error {
 		return err
 	}
 
-	if err = dst.Sync(); err != nil {
+	if dst.Sync() != nil {
 		return err
 	}
 
