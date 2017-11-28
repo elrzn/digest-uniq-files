@@ -10,3 +10,5 @@
         37
     $ digest-uniq-files -ext 'jpg,png'
         37  35
+    $ ls out/ | wc -l
+        35
