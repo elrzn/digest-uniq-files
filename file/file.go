@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -86,14 +85,11 @@ func (f *File) Copy(target string) error {
 	}
 	defer dst.Close()
 
-	bytesWritten, err := io.Copy(dst, src)
-	if err != nil {
+	if _, err = io.Copy(dst, src); err != nil {
 		return err
 	}
-	log.Printf("Copied %d bytes.", bytesWritten)
 
-	err = dst.Sync()
-	if err != nil {
+	if err = dst.Sync(); err != nil {
 		return err
 	}
 
