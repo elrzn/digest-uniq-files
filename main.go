@@ -29,7 +29,7 @@ func main() {
 
 	flag.Parse()
 
-	dir := workingDirectory()
+	dir := workDir()
 	out := dir + "/" + *toDir + "/" // TODO needs better handling
 	os.Mkdir(out, 0777)
 
@@ -52,7 +52,7 @@ func die(err error) {
 	}
 }
 
-func workingDirectory() string {
+func workDir() string {
 
 	// Get the current directory. This can be useful even when the user provided a
 	// working directory, as there is a chance it isn't an absolute path.
