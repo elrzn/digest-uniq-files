@@ -40,7 +40,7 @@ func main() {
 		cnt[f.Hash()]++
 	}
 
-	fmt.Printf("%v\t%v\n", len(files), len(cnt))
+	fmt.Printf("\t%v\t%v\n", len(files), len(cnt))
 }
 
 func die(err error) {
