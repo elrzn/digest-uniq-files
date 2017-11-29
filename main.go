@@ -11,15 +11,12 @@ import (
 )
 
 var (
-	debug   *bool
 	ext     *string
 	fromDir *string
-	recur   *bool
 	toDir   *string
 )
 
 func init() {
-	debug = flag.Bool("debug", false, "enable debug mode")
 	ext = flag.String("ext", "", "a comma separated values indicating the file extensions to look for")
 	fromDir = flag.String("dir", "", "the directory containing the files")
 	toDir = flag.String("out", "out", "the output directory")
